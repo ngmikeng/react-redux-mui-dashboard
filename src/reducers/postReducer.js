@@ -1,4 +1,4 @@
-import { FETCH_USERS } from '../actions/types';
+import { FETCH_POSTS } from '../actions/types';
 
 const initialState = {
   dataRows: [],
@@ -7,7 +7,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case FETCH_USERS: 
+    case FETCH_POSTS: 
       return {
         ...state,
         dataRows: action.payload

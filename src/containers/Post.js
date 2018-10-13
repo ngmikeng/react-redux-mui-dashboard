@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import SimpleTable from '../components/SimpleTable';
 import ModalPost from '../components/ModalPost';
 import { Paper, Button } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { fetchPostsData } from '../actions/post';
 
 class Post extends Component {
   constructor(props) {
@@ -20,18 +22,7 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(response => {
-        return response.json();
-      })
-      .then(result => {
-        this.setState({
-          data: result
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.props.fetchPostsData();
   }
 
   handleOpenPostModal(post, index) {
@@ -92,7 +83,7 @@ class Post extends Component {
             Create
           </Button>
         </Paper>
-        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeletePost} onEdit={this.handleOpenPostModal} />
+        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.props.dataRows} onDelete={this.handleDeletePost} onEdit={this.handleOpenPostModal} />
         <ModalPost open={this.state.isOpenCreateModal}
           post={this.state.postEditing}
           onClose={this.handleCloseCreateModal}
@@ -102,4 +93,8 @@ class Post extends Component {
   }
 }
 
-export default Post;
+const mapStateToProps = (state) => ({
+  dataRows: state.post.dataRows
+});
+
+export default connect(mapStateToProps, { fetchPostsData })(Post);

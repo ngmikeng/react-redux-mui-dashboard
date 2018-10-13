@@ -93,7 +93,7 @@ class User extends Component {
 }
 
 const mapStateToProps = state => ({
-  dataRows: state.users.dataRows
+  dataRows: state.user.dataRows
 });
 
 export default connect(mapStateToProps, { fetchUsersData })(User);

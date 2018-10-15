@@ -56,10 +56,10 @@ const appLayoutStyle = theme => ({
     }),
   },
   'content-left': {
-    marginLeft: -drawerWidth,
+    marginLeft: 0,
   },
   'content-right': {
-    marginRight: -drawerWidth,
+    marginRight: 0,
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -68,10 +68,10 @@ const appLayoutStyle = theme => ({
     }),
   },
   'contentShift-left': {
-    marginLeft: 0,
+    marginLeft: drawerWidth,
   },
   'contentShift-right': {
-    marginRight: 0,
+    marginRight: drawerWidth,
   },
 });
 

@@ -2,8 +2,10 @@
 const drawerWidth = 240;
 const SidebarStyle = theme => ({
   drawerPaper: {
-    position: 'relative',
+    // position: 'relative',
     width: drawerWidth,
+    top: 0,
+    bottom: 0,
   },
   drawerHeader: {
     display: 'flex',

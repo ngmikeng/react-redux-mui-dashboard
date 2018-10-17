@@ -4,7 +4,7 @@ import SimpleTable from '../components/SimpleTable';
 import ModalUser from '../components/ModalUser';
 import { Paper, Button } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { fetchUsersData } from '../actions/user';
+import { fetchUsersData, createUser, editUser } from '../actions/user';
 
 class User extends Component {
   constructor(props) {
@@ -40,18 +40,15 @@ class User extends Component {
 
   handleSubmitUser(user) {
     if (this.state.currentIndex >= 0 && this.state.userEditing) {
-      const data = [...this.state.data];
-      data[this.state.currentIndex] = user;
+      this.props.editUser(user.id, user, this.state.currentIndex);
       setTimeout(() => {
         this.setState({
-          data: data,
           isOpenCreateModal: false
         });
       }, 200);
     } else {
-      user.id = this.state.data.length + 1;
+      this.props.createUser(user);
       this.setState({
-        data: [user, ...this.state.data],
         isOpenCreateModal: false
       });
     }
@@ -92,8 +89,19 @@ class User extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  dataRows: state.user.dataRows
-});
+const mapStateToProps = state => {
+  let dataRows = state.user.dataRows;
+  if (state.user.newData) {
+    dataRows.push(state.user.newData);
+  } else if (state.user.updatedData && state.user.updatedData.index >= 0 && state.user.updatedData.data) {
+    if (dataRows[state.user.updatedData.index]) {
+      dataRows[state.user.updatedData.index] = state.user.updatedData.data;
+    }
+  }
+  return {
+    dataRows: dataRows,
+    newData: state.user.dataRows
+  }
+};
 
-export default connect(mapStateToProps, { fetchUsersData })(User);
+export default connect(mapStateToProps, { fetchUsersData, createUser, editUser })(User);

@@ -1,4 +1,4 @@
-import { FETCH_USERS, CREATE_USER } from './types';
+import { FETCH_USERS, CREATE_USER, EDIT_USER } from './types';
 
 export const fetchUsersData = () => (dispatch) => {
   console.log('fetch user data');
@@ -23,6 +23,25 @@ export const createUser = (userData) => (dispatch) => {
     .then(user => dispatch({
       type: CREATE_USER,
       payload: user
+    })
+  );
+}
+
+export const editUser = (userId, userData, index) => (dispatch) => {
+  console.log('edit user');
+  fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {
+    method: 'PUT',
+    body: JSON.stringify(userData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }})
+    .then(response => response.json())
+    .then(user => dispatch({
+      type: EDIT_USER,
+      payload: {
+      	index: index,
+      	data: user
+      }
     })
   );
 }

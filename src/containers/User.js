@@ -4,7 +4,7 @@ import SimpleTable from '../components/SimpleTable';
 import ModalUser from '../components/ModalUser';
 import { Paper, Button } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { fetchUsersData, createUser, editUser } from '../actions/user';
+import { fetchUsersData, createUser, editUser, deleteUser } from '../actions/user';
 
 class User extends Component {
   constructor(props) {
@@ -57,11 +57,7 @@ class User extends Component {
   handleDeleteUser(user, index) {
     let isConfirm = window.confirm(`Are you sure you want to delete this user ?`);
     if (isConfirm) {
-      let users = [...this.state.data];
-      users.splice(index, 1);
-      this.setState({
-        data: users
-      });
+      this.props.deleteUser(user.id, index);
     }
   }
 
@@ -97,11 +93,14 @@ const mapStateToProps = state => {
     if (dataRows[state.user.updatedData.index]) {
       dataRows[state.user.updatedData.index] = state.user.updatedData.data;
     }
+  } else if (state.user.deletedData && state.user.deletedData.index >= 0 && state.user.deletedData.data) {
+    if (dataRows[state.user.deletedData.index]) {
+      dataRows.splice(state.user.deletedData.index, 1);
+    }
   }
   return {
-    dataRows: dataRows,
-    newData: state.user.dataRows
+    dataRows: [...dataRows]
   }
 };
 
-export default connect(mapStateToProps, { fetchUsersData, createUser, editUser })(User);
+export default connect(mapStateToProps, { fetchUsersData, createUser, editUser, deleteUser })(User);

@@ -1,4 +1,9 @@
-import { FETCH_USERS, CREATE_USER, EDIT_USER, DELETE_USER } from '../actions/types';
+import {
+  FETCH_USERS,
+  CREATE_USER,
+  EDIT_USER,
+  DELETE_USER
+} from '../actions/types';
 
 const crudData = {
   newData: undefined,
@@ -10,29 +15,29 @@ const initialState = {
   ...crudData
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
-    case FETCH_USERS: 
+    case FETCH_USERS:
       return {
         ...state,
         ...crudData,
         dataRows: action.payload,
       };
-    case CREATE_USER: 
+    case CREATE_USER:
       return {
         ...state,
         newData: action.payload,
         updatedData: undefined,
         deletedData: undefined
       };
-    case EDIT_USER: 
+    case EDIT_USER:
       return {
         ...state,
         newData: undefined,
         deletedData: undefined,
         updatedData: action.payload
       };
-    case DELETE_USER: 
+    case DELETE_USER:
       return {
         ...state,
         newData: undefined,
@@ -42,4 +47,4 @@ export default function(state = initialState, action) {
     default:
       return state;
   }
-} 
+}

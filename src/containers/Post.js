@@ -3,7 +3,7 @@ import SimpleTable from '../components/SimpleTable';
 import ModalPost from '../components/ModalPost';
 import { Paper, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { fetchPostsData } from '../actions/post';
+import { fetchPostsData, createPost, editPost, deletePost } from '../actions/post';
 
 class Post extends Component {
   constructor(props) {
@@ -41,18 +41,15 @@ class Post extends Component {
 
   handleSubmitPost(post) {
     if (this.state.currentIndex >= 0 && this.state.postEditing) {
-      const data = [...this.state.data];
-      data[this.state.currentIndex] = post;
+      this.props.editPost(post.id, post, this.state.currentIndex);
       setTimeout(() => {
         this.setState({
-          data: data,
           isOpenCreateModal: false
         });
       }, 200);
     } else {
-      post.id = this.state.data.length + 1;
+      this.props.createPost(post);
       this.setState({
-        data: [post, ...this.state.data],
         isOpenCreateModal: false
       });
     }
@@ -61,11 +58,7 @@ class Post extends Component {
   handleDeletePost(post, index) {
     let isConfirm = window.confirm(`Are you sure you want to delete this post ?`);
     if (isConfirm) {
-      let posts = [...this.state.data];
-      posts.splice(index, 1);
-      this.setState({
-        data: posts
-      });
+      this.props.deletePost(post.id, index);
     }
   }
 
@@ -93,8 +86,22 @@ class Post extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  dataRows: state.post.dataRows
-});
+const mapStateToProps = state => {
+  let dataRows = state.post.dataRows;
+  if (state.post.newData) {
+    dataRows.push(state.post.newData);
+  } else if (state.post.updatedData && state.post.updatedData.index >= 0 && state.post.updatedData.data) {
+    if (dataRows[state.post.updatedData.index]) {
+      dataRows[state.post.updatedData.index] = state.post.updatedData.data;
+    }
+  } else if (state.post.deletedData && state.post.deletedData.index >= 0 && state.post.deletedData.data) {
+    if (dataRows[state.post.deletedData.index]) {
+      dataRows.splice(state.post.deletedData.index, 1);
+    }
+  }
+  return {
+    dataRows: [...dataRows]
+  }
+};
 
-export default connect(mapStateToProps, { fetchPostsData })(Post);
+export default connect(mapStateToProps, { fetchPostsData, createPost, editPost, deletePost })(Post);
